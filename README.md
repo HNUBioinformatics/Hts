@@ -14,9 +14,9 @@ you can make the embeddings contain rich grain-level information to make predict
  * torch-geometric 2.1.0
 
 # Data 
- *ALMANAC-COSMIC includes 87 drugs and 55 cancer cell lines 
- *ONEIL-COSMIC includes 38 drugs and 32 cancer cell lines
+ * ALMANAC-COSMIC includes 87 drugs and 55 cancer cell lines 
+ * ONEIL-COSMIC includes 38 drugs and 32 cancer cell lines
 
 # Running the Code 
- *Excute "python main.py" for classification task 
- *Excute "python main_reg.py" for refression task
+ * Excute "python main.py" for classification task 
+ * Excute "python main_reg.py" for refression task
