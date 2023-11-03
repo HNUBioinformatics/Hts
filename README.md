@@ -7,11 +7,11 @@ and FIE is a fine-grained information extraction module based on attention netwo
 you can make the embeddings contain rich grain-level information to make prediction.
 
 # Requirements 
- *Python 3.7 or higher 
- *PyTorch 1.8.0 or higher 
- *deepchem 2.5.0
- *rdkit 2022.9.5
- *torch-geometric 2.1.0
+ * Python 3.7 or higher 
+ * PyTorch 1.8.0 or higher 
+ * deepchem 2.5.0
+ * rdkit 2022.9.5
+ * torch-geometric 2.1.0
 
 # Data 
  *ALMANAC-COSMIC includes 87 drugs and 55 cancer cell lines 
