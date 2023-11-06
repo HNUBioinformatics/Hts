@@ -2,15 +2,15 @@ import numpy as np
 import pandas as pd
 import torch
 import torch.utils.data as Data
-import sys
-sys.path.append('')
+#import sys
+#sys.path.append('')
 
-from Model.HypertranSynergy.model import Initialize, Hts, CIE, Decoder
 from sklearn.model_selection import KFold
 import os
 import glob
 
 sys.path.append('')
+from Model.HypertranSynergy.model import Initialize, Hts, CIE, Decoder
 from Model.drug_util import GraphDataset, collate
 from Model.utils import metrics_graph, set_seed_all
 from Model.FIE import *
