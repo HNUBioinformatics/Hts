@@ -19,5 +19,5 @@ you can make the embeddings contain rich grain-level information to make predict
 
 # Running the Code 
  *for classification task 
-   * step1:
+  step1:
  * Excute "python main_reg.py" for refression task
