@@ -3,14 +3,14 @@ import pandas as pd
 import torch
 import torch.utils.data as Data
 import sys
+sys.path.append('')
 
-from model import Initialize, Hts, CIE, Decoder
+from Model.HypertranSynergy.model import Initialize, Hts, CIE, Decoder
 from sklearn.model_selection import KFold
 import os
 import glob
-import sys
 
-sys.path.append()
+sys.path.append('')
 from Model.drug_util import GraphDataset, collate
 from Model.utils import metrics_graph, set_seed_all
 from Model.FIE import *
@@ -100,7 +100,7 @@ def test(drug_fea_set, cline_fea_set, synergy_adj, index, label, alpha):
 
 
 if __name__ == '__main__':
-    #dataset_name = 'ALMANAC'  # or ONEIL
+    #dataset_name = 'ALMANAC'
     dataset_name = 'ONEIL'
     seed =0
     cv_mode_ls = [1, 2, 3]
@@ -108,9 +108,10 @@ if __name__ == '__main__':
     learning_rate = 0.00005
     L2 = 1e-4
     alpha = 0.4
+    root_dir = ''
     for cv_mode in cv_mode_ls:
-        path = 'result_cls/' + dataset_name + '_' + str(cv_mode) + '_'
-        file = open(path + 'result.txt', 'w')
+        path = os.path.join(root_dir,'result_cls/' + dataset_name + '_' + str(cv_mode) + '_result.txt')
+        file = open(path, 'w')
         set_seed_all(seed)
         drug_feature, cline_feature, synergy_data, drug_sim_mat, cline_sim_mat = load_data(dataset_name)
         drug_set = Data.DataLoader(dataset=GraphDataset(graphs_dict=drug_feature),
