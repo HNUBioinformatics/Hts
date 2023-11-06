@@ -28,5 +28,5 @@ you can make the embeddings contain rich grain-level information to make predict
  * for the regression task
    * step1:Create a folder called "result_reg" inside the "Hts" directory;
    * step2:Add the path to the "Model" folder at line 6 of the "model_reg.py" file
-   * step3:Add the path to the "Model" folder at line 12 of the "main_reg.py" file, and add the path to the "result_reg" folder at line 100
+   * step3:Add the path to the "Model" folder at line 11 of the "main_reg.py" file, and add the path to the "result_reg" folder at line 100
    * step4:Running the "main_reg.py"
