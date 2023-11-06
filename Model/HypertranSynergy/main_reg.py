@@ -25,6 +25,8 @@ def load_data(dataset):
     cline_fea = torch.from_numpy(cline_fea).to(device)
 
     drug_sim_matrix, cline_sim_matrix = get_sim_mat(drug_smiles_fea, np.array(gene_data, dtype='float32'))
+    drug_sim_matrix = drug_sim_matrix[:,:38]
+    cline_sim_matrix = cline_sim_matrix[:,:32]
     return drug_fea, cline_fea, synergy, drug_sim_matrix, cline_sim_matrix
 
 
