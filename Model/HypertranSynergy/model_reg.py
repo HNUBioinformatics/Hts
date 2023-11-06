@@ -3,11 +3,9 @@ import torch.nn as nn
 from torch_geometric.nn import HypergraphConv, GCNConv, global_max_pool, global_mean_pool
 import sys
 
-
+sys.path.append('')
 from Model.HypertranSynergy.GIN import *
 from Model.HypertranSynergy.trans import *
-
-sys.path.append('')
 from Model.utils import reset
 
 
