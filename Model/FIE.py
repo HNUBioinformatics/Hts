@@ -1,5 +1,7 @@
 ﻿import numpy as np
 from scipy.stats import pearsonr
+import sys
+sys.path.append('')
 
 from FIE1 import *
 
