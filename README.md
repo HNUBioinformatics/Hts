@@ -19,7 +19,7 @@ you can make the embeddings contain rich grain-level information to make predict
 
 # Running the Code 
  * Add the path to the "Data" folder on lines 13 and 19 of the "process_data.py" file
- * Add the path to the "FIE1.py" file at line 4 of the "FIE.py" file
+ * Add the path to the "FIE1.py" file in line 4 of the "FIE.py" file
  * for the classification task 
    * step1:Create a folder called "result_cls" inside the "Hts" directory;
    * step2:Add the path to the "Model" folder at line 12 of the "model.py" file
