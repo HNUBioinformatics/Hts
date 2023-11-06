@@ -23,7 +23,7 @@ you can make the embeddings contain rich grain-level information to make predict
  * for the classification task 
    * step1:Create a folder called "result_cls" inside the "Hts" directory;
    * step2:Add the path to the "Model" folder at line 12 of the "model.py" file
-   * step3:Add the path to the "Model" folder on lines 6 and 13 of the "main.py" file, and add the path to the "result cls" folder at line 111
+   * step3:Add the path to the "Model" folder at line 12 of the "main.py" file, and add the path to the "result cls" folder at line 111
    * step4:Running the "main.py"
  * for the regression task
    * step1:Create a folder called "result_reg" inside the "Hts" directory;
