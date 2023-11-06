@@ -25,7 +25,7 @@ you can make the embeddings contain rich grain-level information to make predict
    * step3:Add the path to the "Model" folder on lines 6 and 13 of the "main.py" file, and add the path to the "result cls" folder at line 111
    * step4:Running the "main.py"
  * Excute "python main_reg.py" for refression task
-    * step1:Create a folder called "result_reg" inside the "Hts" directory;
+   * step1:Create a folder called "result_reg" inside the "Hts" directory;
    * step2:Add the path to the "Model" folder at line 6 of the "model_reg.py" file
-   * step3:Add the path to the "Model" folder on lines 6 and 13 of the "main_reg.py" file, and add the path to the "result_reg" folder at line 111
+   * step3:Add the path to the "Model" folder on lines 12 of the "main_reg.py" file, and add the path to the "result_reg" folder at line 100
    * step4:Running the "main_reg.py"
