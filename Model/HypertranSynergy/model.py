@@ -5,8 +5,10 @@ from torch_geometric.nn import GINConv,GATConv,JumpingKnowledge
 from GIN import *
 import sys
 from trans import *
-from Hyperformer.model.Hyperformer import *
-sys.path.append()
+from Model.HypertranSynergy.GIN import *
+from Model.HypertranSynergy.trans import *
+
+sys.path.append('')
 from Model.utils import reset
 
 drug_num = 38
@@ -127,4 +129,5 @@ class Hts(torch.nn.Module):
         rec_drug = torch.sigmoid(torch.mm(torch.mm(drug_emb, self.drug_rec_weight), drug_emb.t()))
         rec_cline = torch.sigmoid(torch.mm(torch.mm(cline_emb, self.cline_rec_weight), cline_emb.t()))
         res = self.decoder(graph_embed, druga_id, drugb_id, cellline_id)
-        return res, rec_drug, rec_cline
+        tsne = self.decoder(graph_embed, druga_id, drugb_id, cellline_id)
+        return res, rec_drug, rec_cline, tsne
