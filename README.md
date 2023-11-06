@@ -18,5 +18,6 @@ you can make the embeddings contain rich grain-level information to make predict
  * ONEIL-COSMIC includes 38 drugs and 32 cancer cell lines
 
 # Running the Code 
- * Excute "python main.py" for classification task 
+ *for classification task 
+   * step1:
  * Excute "python main_reg.py" for refression task
