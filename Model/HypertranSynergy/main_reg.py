@@ -2,14 +2,14 @@ import numpy as np
 import pandas as pd
 import torch
 import torch.utils.data as Data
-from model_reg import Initialize, Hts, CIE, Decoder
+from Model.HypertranSynergy.model_reg import Initialize, Hts, CIE, Decoder
 from sklearn.model_selection import KFold
 import os
 import glob
 import warnings
 import sys
 
-sys.path.append('..')
+sys.path.append('')
 from Model.drug_util import GraphDataset, collate
 from Model.utils import regression_metric, set_seed_all
 from Model.process_data import getData
