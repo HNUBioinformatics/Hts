@@ -20,8 +20,12 @@ you can make the embeddings contain rich grain-level information to make predict
 # Running the Code 
  * Add the path to the "Data" folder on lines 13 and 19 of the "process_data.py" file
  * for the classification task 
-   * step1:Create a folder called "result cls" inside the "Hts" directory;
+   * step1:Create a folder called "result_cls" inside the "Hts" directory;
    * step2:Add the path to the "Model" folder at line 12 of the "model.py" file
-   * step3:Add the path to the "Model" folder at lines 6 and 14 of the "main.py" file, and add the path to the "result cls" folder at line 112
+   * step3:Add the path to the "Model" folder on lines 6 and 13 of the "main.py" file, and add the path to the "result cls" folder at line 111
    * step4:Running the "main.py"
  * Excute "python main_reg.py" for refression task
+    * step1:Create a folder called "result_reg" inside the "Hts" directory;
+   * step2:Add the path to the "Model" folder at line 12 of the "model_reg.py" file
+   * step3:Add the path to the "Model" folder on lines 6 and 13 of the "main.py" file, and add the path to the "result cls" folder at line 111
+   * step4:Running the "main_reg.py"
