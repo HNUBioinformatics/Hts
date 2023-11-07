@@ -21,12 +21,15 @@ you can make the embeddings contain rich grain-level information to make predict
  * Add the path to the "Data" folder on lines 13 and 19 of the "process_data.py" file
  * Add the path to the "FIE1.py" file in line 4 of the "FIE.py" file
  * for the classification task 
-   * step1:Create a folder called "result_cls" inside the "Hts" directory;
+   * step1:Create a folder called "result_cls" inside the "Hts-main" directory;
    * step2:Add the path to the "Model" folder at line 12 of the "model.py" file
    * step3:Add the path to the "Model" folder at line 12 of the "main.py" file, and add the path to the "result cls" folder at line 111
    * step4:Running the "main.py"
  * for the regression task
-   * step1:Create a folder called "result_reg" inside the "Hts" directory;
+   * step1:Create a folder called "result_reg" inside the "Hts-main" directory;
    * step2:Add the path to the "Model" folder at line 6 of the "model_reg.py" file
    * step3:Add the path to the "Model" folder at line 11 of the "main_reg.py" file, and add the path to the "result_reg" folder at line 100
    * step4:Running the "main_reg.py"
+
+# The trained model can be downloaded at the following link
+  https://onedrive.live.com/authkey=%21ACWnMJWbC1oQchU&id=E4FC343813395177%21108&cid=E4FC343813395177
