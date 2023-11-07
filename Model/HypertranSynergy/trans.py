@@ -76,6 +76,7 @@ class MultiHeadAttention(nn.Module):
         context_layer = context_layer.view(*new_context_layer_shape)
         hidden_states = self.dense(context_layer)
         hidden_states = self.out_dropout(hidden_states)
+        hidden_states = self.LayerNorm(hidden_states + input_tensor)
         hidden_states = self.LayerNorm1(hidden_states + input_tensor)
 
         return hidden_states
@@ -92,6 +93,7 @@ class FeedForward(nn.Module):
 
         self.LayerNorm = ContraNorm(hidden_size, scale=0.0, dual_norm=False, pre_norm=False, temp=1.0, learnable=False,
                                     positive=False, identity=False)
+        self.LayerNorm1 = nn.LayerNorm(hidden_size, eps=layer_norm_eps)
 
         self.dropout = nn.Dropout(hidden_dropout_prob)
 
@@ -118,6 +120,7 @@ class FeedForward(nn.Module):
 
         hidden_states = self.dense_2(hidden_states)
         hidden_states = self.dropout(hidden_states)
+        hidden_states = self.LayerNorm1(hidden_states + input_tensor)
         hidden_states = self.LayerNorm(hidden_states + input_tensor)
 
         return hidden_states
