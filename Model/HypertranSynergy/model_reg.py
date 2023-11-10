@@ -20,7 +20,7 @@ class Initialize(nn.Module):
         self.fc_cell1 = nn.Linear(dim_cellline, 128)
         self.batch_cell1 = nn.BatchNorm1d(128)
         self.fc_cell2 = nn.Linear(128, output)
-        self.drop_out = nn.Dropout(0.3)
+        self.drop_out = nn.Dropout(0.7)
         self.act = nn.ReLU()
 
     def forward(self, drug_feature, drug_adj, ibatch, gexpr_data):
@@ -35,7 +35,7 @@ class Initialize(nn.Module):
 class CIE(torch.nn.Module):
     def __init__(self, in_channels, out_channels):
         super(CIE, self).__init__()
-        self.drop_out = nn.Dropout(0.3)
+        self.drop_out = nn.Dropout(0.75)
         self.act = nn.LeakyReLU(0.2)
 
         self.conv3 = HypergraphConv(100, out_channels)
