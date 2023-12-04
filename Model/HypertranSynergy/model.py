@@ -48,11 +48,11 @@ class CIE(torch.nn.Module):
     def __init__(self, in_channels, out_channels):
         super(CIE, self).__init__()
 
-        self.conv3 = HypergraphConv(100, out_channels)
+        self.conv3 = HypergraphConv(128, out_channels)
         self.act = nn.ReLU()
 
-        self.MH = MultiHeadAttention(2, 100, 0.5, 0.5, 1e-5)
-        self.FW = FeedForward(100, 256, 0.5, 'sigmoid', 1e-5)
+        self.MH = MultiHeadAttention(2, 128, 0.5, 0.5, 1e-5)
+        self.FW = FeedForward(128, 256, 0.5, 'sigmoid', 1e-5)
 
         self.dropout = nn.Dropout(0.3)
 
