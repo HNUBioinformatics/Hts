@@ -160,8 +160,8 @@ if __name__ == '__main__':
             synergy_graph = torch.from_numpy(synergy_graph).type(torch.LongTensor).to(device)
 
             # ---model_build
-            model = Hts(Initialize(dim_drug=75, dim_cellline=cline_feature.shape[-1], output=100),
-                                      CIE(in_channels=100, out_channels=512), Decoder(in_channels=1536)).to(device)
+            model = Hts(Initialize(dim_drug=75, dim_cellline=cline_feature.shape[-1], output=128),
+                                      CIE(in_channels=128, out_channels=512), Decoder(in_channels=1536)).to(device)
             
             loss_func = torch.nn.BCELoss()
             #loss_func = torch.nn.CrossEntropyLoss()
