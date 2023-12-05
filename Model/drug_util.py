@@ -7,7 +7,7 @@ import pandas as pd
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 
-# device = torch.device('cpu')
+
 class GraphDataset(InMemoryDataset):
     def __init__(self, root='.', dataset='davis', transform=None, pre_transform=None, graphs_dict=None, dttype=None):
         super(GraphDataset, self).__init__(root, transform, pre_transform)
