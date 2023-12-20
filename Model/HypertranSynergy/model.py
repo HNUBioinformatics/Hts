@@ -126,8 +126,6 @@ class Hts(torch.nn.Module):
         merge_embed = torch.cat((drug_embed, cellline_embed), 0)
         graph_embed = self.cie(merge_embed, adj)
         drug_emb, cline_emb = graph_embed[:drug_num], graph_embed[drug_num:]
-        rec_drug = torch.sigmoid(torch.mm(torch.mm(drug_emb, self.drug_rec_weight), drug_emb.t()))
-        rec_cline = torch.sigmoid(torch.mm(torch.mm(cline_emb, self.cline_rec_weight), cline_emb.t()))
         res = self.decoder(graph_embed, druga_id, drugb_id, cellline_id)
         tsne = self.decoder(graph_embed, druga_id, drugb_id, cellline_id)
         return res, rec_drug, rec_cline, tsne
