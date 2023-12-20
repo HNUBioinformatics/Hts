@@ -108,7 +108,6 @@ if __name__ == '__main__':
                                    collate_fn=collate, batch_size=len(drug_feature), shuffle=False)
         cline_set = Data.DataLoader(dataset=Data.TensorDataset(cline_feature),
                                     batch_size=len(cline_feature), shuffle=False)
-
         synergy_cv, index_test, label_test = data_split(synergy_data)
         if cv_mode == 1:
             cv_data = synergy_cv
@@ -131,16 +130,11 @@ if __name__ == '__main__':
             else:
                 pair_train, pair_validation = cv_data[train_index], cv_data[validation_index]
                 synergy_train = np.array(
-                    [j for i in pair_train for j in synergy_cv if (i[0] == j[0]) and (i[1] == j[1])])
-                synergy_validation = np.array(
-                    [j for i in pair_validation for j in synergy_cv if (i[0] == j[0]) and (i[1] == j[1])])
+                    [j for i in pair_train for j in synergy_cv if (i[0] == j[0]) and (i[1] == j[1])])                
             # ---construct train_set+validation_set
             np.savetxt(path + 'val_' + str(fold_num) + '_true.txt', synergy_validation[:, 3])
             label_train = torch.from_numpy(np.array(synergy_train[:, 3], dtype='float32')).to(device)
             label_validation = torch.from_numpy(np.array(synergy_validation[:, 3], dtype='float32')).to(device)
-            index_train = torch.from_numpy(synergy_train[:, 0:3]).long().to(device)
-            index_validation = torch.from_numpy(synergy_validation[:, 0:3]).long().to(device)
-            # -----construct hyper_synergy_graph_set
             synergy_train_tmp = np.copy(synergy_train)
             for data in synergy_train_tmp:
                 data[3] = 1 if data[3] >= 30 else 0
@@ -149,9 +143,7 @@ if __name__ == '__main__':
             synergy_edge = edge_data.reshape(1, -1)
             index_num = np.expand_dims(np.arange(len(edge_data)), axis=-1)
             synergy_num = np.concatenate((index_num, index_num, index_num), axis=1).reshape(1, -1)
-            synergy_graph = np.concatenate((synergy_edge, synergy_num), axis=0)
             synergy_graph = torch.from_numpy(synergy_graph).type(torch.LongTensor).to(device)
-
             # ---model_build
             model = Hts(Initialize(dim_drug=75, dim_cellline=cline_feature.shape[-1], output=100),
                                       CIE(in_channels=100, out_channels=512), Decoder(in_channels=1536)).to(device)
@@ -196,8 +188,7 @@ if __name__ == '__main__':
                                              label_validation, alpha)
             test_metric, _, y_test_pred = test(drug_set, cline_set, synergy_graph, index_test,
                                                label_test, alpha)
-            np.savetxt(path + 'val_' + str(fold_num) + '_pred.txt', y_val_pred)
-            np.savetxt(path + 'test_' + str(fold_num) + '_pred.txt', y_test_pred)
+            np.savetxt(path + 'val_' + str(fold_num) + '_pred.txt', y_val_pred)          
             file.write('val_metric:')
             for item in val_metric:
                 file.write(str(item) + '\t')
@@ -208,6 +199,4 @@ if __name__ == '__main__':
             final_metric += val_metric
             fold_num = fold_num + 1
         final_metric /= 5
-        print('Final 5-cv average results, RMSE: {:.6f},'.format(final_metric[0]),
-              'R2: {:.6f},'.format(final_metric[1]),
-              'Pearson r: {:.6f},'.format(final_metric[2]))
+  
