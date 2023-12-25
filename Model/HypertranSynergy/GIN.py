@@ -8,7 +8,6 @@ class GIN_drug(torch.nn.Module):
         super().__init__()
         self.nn1 = nn1
         self.dim = dim
-        self.JK = JumpingKnowledge('cat')
         self.nn2 = torch.nn.ModuleList()
         self.nn3 = torch.nn.ModuleList()
 
@@ -24,13 +23,14 @@ class GIN_drug(torch.nn.Module):
 
             self.nn2.append(conv)
             self.nn3.append(bn)
-            self.dropout = nn.Dropout(0.3)
+        self.JK = JumpingKnowledge('cat')
+        self.dp = nn.Dropout(0.3)
 
     def forward(self, drug_feature, drug_adj, ibatch):
         x, edge_index, batch = drug_feature, drug_adj, ibatch
         list = []
         for i in range(self.nn1):
-            x = F.relu(self.dropout(self.convs_drug[i](x, edge_index)))
+            x = F.relu(self.dp(self.convs_drug[i](x, edge_index)))
             # x = self.dropout(x)
             x = self.bns_drug[i](x)
             # x = self.dropout(x)
