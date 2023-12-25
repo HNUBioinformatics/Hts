@@ -16,7 +16,7 @@ cline_num = 32
 class Initialize(nn.Module):
     def __init__(self, dim_drug, dim_cellline, output, use_GMP=True):
         super(Initialize, self).__init__()
-        self.JK1 = GNN_drug(2,dim_drug)
+        self.JK1 = GIN_drug(2,dim_drug)
         self.fc_cell1 = nn.Linear(dim_cellline, 128)
         self.batch_cell1 = nn.BatchNorm1d(128)
         self.fc_cell2 = nn.Linear(128, output)
