@@ -5,11 +5,6 @@ from contranorm import *
 class MultiHeadAttention(nn.Module):
     def __init__(self, heads, size, dp1, dp2, ne):
         super(MultiHeadAttention, self).__init__()
-        if size % heads != 0:
-            raise ValueError(
-                "The hidden size (%d) is not a multiple of the number of attention "
-                "heads (%d)" % (size, heads)
-            )
 
         self.heads = heads
         self.h_size = int(size / heads)
@@ -19,16 +14,15 @@ class MultiHeadAttention(nn.Module):
         self.k = nn.Linear(size, self.t_size)
         self.v = nn.Linear(size, self.t_size)
 
-        self.attn_dropout = nn.Dropout(dp2)
-
         self.dense = nn.Linear(size, size)
+        self.input_proj = nn.Linear(50, 142)
 
+        self.dp1 = nn.Dropout(dp1)
+        self.dp2 = nn.Dropout(dp2)
+        
         self.LayerNorm = nn.LayerNorm(size, eps=ne)
         self.LayerNorm1 = ContraNorm(size, scale=0.0, dual_norm=False, pre_norm=False, temp=1.0, learnable=False,
                                      positive=False, identity=False)
-        self.input_proj = nn.Linear(50, 142)
-
-        self.out_dropout = nn.Dropout(dp1)
 
     def transpose_for_scores(self, x):
         new_x_shape = x.size()[:-1] + (self.heads, self.h_size)
@@ -58,13 +52,13 @@ class MultiHeadAttention(nn.Module):
         attention_probs = nn.Softmax(dim=-1)(attention_scores)
 
 
-        attention_probs = self.attn_dropout(attention_probs)
+        attention_probs = self.dp2(attention_probs)
         context_layer = torch.matmul(attention_probs, value_layer)
         context_layer = context_layer.permute(0, 2, 1).contiguous()
         new_context_layer_shape = context_layer.size()[:-2] + (self.t_size,)
         context_layer = context_layer.view(*new_context_layer_shape)
         hidden_states = self.dense(context_layer)
-        hidden_states = self.out_dropout(hidden_states)
+        hidden_states = self.dp1(hidden_states)
         hidden_states = self.LayerNorm(hidden_states + input_tensor)
         hidden_states = self.LayerNorm1(hidden_states + input_tensor)
 
