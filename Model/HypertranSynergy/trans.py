@@ -15,7 +15,6 @@ class MultiHeadAttention(nn.Module):
         self.v = nn.Linear(size, self.t_size)
 
         self.dense = nn.Linear(size, size)
-        self.input_proj = nn.Linear(50, 142)
 
         self.dp1 = nn.Dropout(dp1)
         self.dp2 = nn.Dropout(dp2)
