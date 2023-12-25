@@ -14,8 +14,8 @@ you can make the embeddings contain rich grain-level information to make predict
  * torch-geometric 2.1.0
 
 # Data 
- * ALMANAC-COSMIC includes 87 drugs and 55 cancer cell lines 
  * ONEIL-COSMIC includes 38 drugs and 32 cancer cell lines
+ * ALMANAC-COSMIC includes 87 drugs and 55 cancer cell lines 
 
 # Running the Code 
  * Add the path to the "Data" folder on lines 13 and 19 of the "process_data.py" file
@@ -30,6 +30,3 @@ you can make the embeddings contain rich grain-level information to make predict
    * step2:Add the path to the "Model" folder at line 6 of the "model_reg.py" file
    * step3:Add the path to the "Model" folder at line 11 of the "main_reg.py" file, and add the path to the "result_reg" folder at line 100
    * step4:Running the "main_reg.py"
-
-# The trained model can be downloaded at the following link
-  https://onedrive.live.com/authkey=%21ACWnMJWbC1oQchU&id=E4FC343813395177%21108&cid=E4FC343813395177
