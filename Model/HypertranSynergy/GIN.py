@@ -10,7 +10,6 @@ class GIN_drug(torch.nn.Module):
         self.dim = dim
         self.nn2 = torch.nn.ModuleList()
         self.nn3 = torch.nn.ModuleList()
-
         self.conv = GCNConv(225, 100)
 
         for i in range(self.nn1):
