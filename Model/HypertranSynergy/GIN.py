@@ -9,8 +9,8 @@ class GIN_drug(torch.nn.Module):
         self.nn1 = nn1
         self.dim = dim
         self.JK = JumpingKnowledge('cat')
-        self.convs_drug = torch.nn.ModuleList()
-        self.bns_drug = torch.nn.ModuleList()
+        self.nn2 = torch.nn.ModuleList()
+        self.nn3 = torch.nn.ModuleList()
 
         self.conv = GCNConv(225, 100)
 
@@ -25,8 +25,8 @@ class GIN_drug(torch.nn.Module):
             conv = GINConv(block)
             bn = torch.nn.BatchNorm1d(self.dim)
 
-            self.convs_drug.append(conv)
-            self.bns_drug.append(bn)
+            self.nn2.append(conv)
+            self.nn3.append(bn)
 
     def forward(self, drug_feature, drug_adj, ibatch):
         x, edge_index, batch = drug_feature, drug_adj, ibatch
