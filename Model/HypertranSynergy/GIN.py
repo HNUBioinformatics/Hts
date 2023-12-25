@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch_geometric.nn import GINConv, JumpingKnowledge, global_max_pool, GCNConv
 
-class GNN_drug(torch.nn.Module):
+class GIN_drug(torch.nn.Module):
     def __init__(self, layer_drug, dim_drug):
         super().__init__()
         self.layer_drug = layer_drug
