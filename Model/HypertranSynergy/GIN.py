@@ -46,6 +46,5 @@ class GNN_drug(torch.nn.Module):
 
         node_representation = self.JK(x_drug_list)
         x_drug = global_max_pool(node_representation, batch)
-        x_drug = x_drug[:,:128]
 
         return x_drug
