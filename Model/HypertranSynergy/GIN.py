@@ -33,15 +33,10 @@ class GIN_drug(torch.nn.Module):
         list = []
         for i in range(self.nn1):
             x = F.relu(self.dropout(self.convs_drug[i](x, edge_index)))
-
             # x = self.dropout(x)
-
             x = self.bns_drug[i](x)
-
             # x = self.dropout(x)
-
             list.append(x)
-
             # x = self.dropout(x)
 
         exp = self.JK(list)
