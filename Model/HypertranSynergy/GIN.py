@@ -18,10 +18,10 @@ class GIN_drug(torch.nn.Module):
                 block = nn.Sequential(nn.Linear(self.dim, self.dim), nn.ReLU(),nn.Linear(self.dim, self.dim))
             else:
                 block = nn.Sequential(nn.Linear(75, self.dim), nn.ReLU(), nn.Linear(self.dim, self.dim))
-            conv = GINConv(block)
+            gin = GINConv(block)
             bn = torch.nn.BatchNorm1d(self.dim)
 
-            self.nn2.append(conv)
+            self.nn2.append(gin)
             self.nn3.append(bn)
         self.JK = JumpingKnowledge('cat')
         self.dp = nn.Dropout(0.3)
