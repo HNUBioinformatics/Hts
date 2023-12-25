@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch_geometric.nn import GINConv, JumpingKnowledge, global_max_pool, GCNConv
+from torch_geometric.nn import GINConv, GCNConv, JumpingKnowledge, global_max_pool
 
 class GIN_drug(torch.nn.Module):
     def __init__(self, layer_drug, dim_drug):
