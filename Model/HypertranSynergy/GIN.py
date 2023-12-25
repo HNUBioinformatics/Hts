@@ -30,7 +30,7 @@ class GIN_drug(torch.nn.Module):
 
     def forward(self, drug_feature, drug_adj, ibatch):
         x, edge_index, batch = drug_feature, drug_adj, ibatch
-        x_drug_list = []
+        list = []
         for i in range(self.nn1):
             x = F.relu(self.dropout(self.convs_drug[i](x, edge_index)))
 
@@ -40,11 +40,11 @@ class GIN_drug(torch.nn.Module):
 
             # x = self.dropout(x)
 
-            x_drug_list.append(x)
+            list.append(x)
 
             # x = self.dropout(x)
 
-        node_representation = self.JK(x_drug_list)
-        x_drug = global_max_pool(node_representation, batch)
+        exp = self.JK(list)
+        drug = global_max_pool(exp, batch)
 
-        return x_drug
+        return drug
