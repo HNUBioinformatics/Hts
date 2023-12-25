@@ -14,12 +14,9 @@ class GIN_drug(torch.nn.Module):
 
         self.conv = GCNConv(225, 100)
 
-        self.dropout = nn.Dropout(0.3)
-
         for i in range(self.nn1):
             if i:
-                block = nn.Sequential(nn.Linear(self.dim, self.dim), nn.ReLU(),
-                                      nn.Linear(self.dim, self.dim))
+                block = nn.Sequential(nn.Linear(self.dim, self.dim), nn.ReLU(),nn.Linear(self.dim, self.dim))
             else:
                 block = nn.Sequential(nn.Linear(75, self.dim), nn.ReLU(), nn.Linear(self.dim, self.dim))
             conv = GINConv(block)
@@ -27,6 +24,7 @@ class GIN_drug(torch.nn.Module):
 
             self.nn2.append(conv)
             self.nn3.append(bn)
+            self.dropout = nn.Dropout(0.3)
 
     def forward(self, drug_feature, drug_adj, ibatch):
         x, edge_index, batch = drug_feature, drug_adj, ibatch
