@@ -18,13 +18,13 @@ from Model.drug_util import drug_feature_extract
 def getData(dataset):
     root_dir = ''
     if dataset == 'ONEIL':
-        drug_smiles_file = root_dir+'Data/ONEIL-COSMIC/drug_smiles.csv'
-        cline_feature_file = root_dir+'Data/ONEIL-COSMIC/cell line_gene_expression.csv'
-        drug_synergy_file = root_dir+'Data/ONEIL-COSMIC/drug_synergy.csv'
+        drug_smiles_file = root_dir+''
+        cline_feature_file = root_dir+''
+        drug_synergy_file = root_dir+''
     else:
-        drug_smiles_file = root_dir+'Data/ALMANAC-COSMIC/drug_smiles.csv'
-        cline_feature_file = root_dir+'Data/ALMANAC-COSMIC/cell line_gene_expression.csv'
-        drug_synergy_file = root_dir+'Data/ALMANAC-COSMIC/drug_synergy.csv'
+        drug_smiles_file = root_dir+''
+        cline_feature_file = root_dir+''
+        drug_synergy_file = root_dir+''
     drug = pd.read_csv(drug_smiles_file, sep=',', header=0, index_col=[0])
     drug_data = pd.DataFrame()
     drug_smiles_fea = []
