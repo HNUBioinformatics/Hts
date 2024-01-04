@@ -16,7 +16,7 @@ you can make the embeddings contain rich grain-level information to make predict
 # Data 
  * cell line
    * https://pan.baidu.com/s/1inc_gzfEeQRbieyAZhD7jQ
-    
+   *
  * drug
    * https://pan.baidu.com/s/1d5j1VYp2WqlnpkRgLALqPQ
    * 
