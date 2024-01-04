@@ -100,14 +100,13 @@ def test(drug_fea_set, cline_fea_set, synergy_adj, index, label, alpha):
 
 
 if __name__ == '__main__':
-    #dataset_name = 'ALMANAC'
     dataset_name = 'ONEIL'
-    seed =10
+    seed =
     cv_mode_ls = [1, 2, 3]
-    epochs =2500
-    learning_rate = 0.00005
-    L2 = 1e-4
-    alpha = 0.4
+    epochs =
+    learning_rate = 
+    L2 = 
+    alpha = 
     root_dir = ''
     for cv_mode in cv_mode_ls:
         path = os.path.join(root_dir,'result_cls/' + dataset_name + '_' + str(cv_mode) + '_result.txt')
