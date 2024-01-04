@@ -15,14 +15,14 @@ you can make the embeddings contain rich grain-level information to make predict
 
 # Data 
  * cell line
-   ** https://pan.baidu.com/s/1inc_gzfEeQRbieyAZhD7jQ
-   ** 
+   * https://pan.baidu.com/s/1inc_gzfEeQRbieyAZhD7jQ
+    
  * drug
-   **https://pan.baidu.com/s/1d5j1VYp2WqlnpkRgLALqPQ
-   ** 
+   * https://pan.baidu.com/s/1d5j1VYp2WqlnpkRgLALqPQ
+   * 
  * synergy
-   **https://pan.baidu.com/s/1wG4NQqnm0c88tRTX3vuplg
-   ** 
+   * https://pan.baidu.com/s/1wG4NQqnm0c88tRTX3vuplg
+   *
 
 # Running the Code 
  * Add the path to the "Data" folder on lines 13 and 19 of the "process_data.py" file
