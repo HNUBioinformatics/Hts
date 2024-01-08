@@ -10,9 +10,9 @@ import pandas as pd
 import numpy as np
 
 import sys
-sys.path.append('')
-from Model.utils import get_MACCS
-from Model.drug_util import drug_feature_extract
+#sys.path.append('')
+from utils import get_MACCS
+from drug_util import drug_feature_extract
 
 
 def getData(dataset):
