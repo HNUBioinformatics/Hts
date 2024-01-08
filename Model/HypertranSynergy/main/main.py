@@ -6,9 +6,17 @@ import os
 import glob
 
 from sklearn.model_selection import KFold
+'''
+#classification
 from HypertranSynergy.model import Initialize, Hts, CIE, Decoder
-from drug_util import GraphDataset, collate
 from utils import metrics_graph, set_seed_all
+'''
+'''
+#regression
+from Model.HypertranSynergy.model_reg import Initialize, Hts, CIE, Decoder
+from utils import regression_metrics, set_seed_all
+'''
+from drug_util import GraphDataset, collate
 from FIE import *
 from process_data import getData
 
