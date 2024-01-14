@@ -38,5 +38,5 @@ you can make the embeddings contain rich grain-level information to make predict
    * step3:Add the path to the "Model" folder at line 11 of the "main_reg.py" file, and add the path to the "result_reg" folder at line 100
    * step4:Running the "main_reg.py"
   
-# Hyperparameter
+# Others
   updating...
