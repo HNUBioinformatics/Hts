@@ -126,8 +126,9 @@ class Hts(torch.nn.Module):
     def forward(self, d_ft, d_adj, batch, c_ft, h_adj, entity1, entity2, entity3):
         embs_d, embs_c = self.initialize(d_ft, d_adj, batch, c_ft)
         embs_dc = torch.cat((embs_d, embs_c), 0)
-        graph_embed = self.cie(embs_dc, h_adj)
-        drug_emb, cline_emb = graph_embed[:drug_num], graph_embed[drug_num:]
-        res = self.decoder(graph_embed, entity1, entity2, entity3)
-        tsne = self.decoder(graph_embed, entity1, entity2, entity3)
-        return res, rec_drug, rec_cline, tsne
+        embs_hg = self.cie(embs_dc, h_adj)
+        drug_emb, cline_emb = embs_hg[:drug_num], embs_hg[drug_num:]
+        fie_d = torch.sigmoid(torch.mm(torch.mm(drug_emb, self.drug_rec_weight), drug_emb.t()))
+        fie_c = torch.sigmoid(torch.mm(torch.mm(cline_emb, self.cline_rec_weight), cline_emb.t()))
+        res = self.decoder(embs_hg, entity1, entity2, entity3)
+        return res, fie_d, fie_c, tsne
