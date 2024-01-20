@@ -131,4 +131,4 @@ class Hts(torch.nn.Module):
         fie_d = torch.sigmoid(torch.mm(torch.mm(drug_emb, self.drug_rec_weight), drug_emb.t()))
         fie_c = torch.sigmoid(torch.mm(torch.mm(cline_emb, self.cline_rec_weight), cline_emb.t()))
         res = self.decoder(embs_hg, entity1, entity2, entity3)
-        return res, fie_d, fie_c, tsne
+        return res, fie_d, fie_c
