@@ -12,8 +12,9 @@ from Model.HypertranSynergy.trans import *
 sys.path.append('')
 from Model.utils import reset
 
-drug_num = 38
-cline_num = 32
+#number of your drug/celll line
+drug_num = 
+cline_num = 
 
 
 class Initialize(nn.Module):
