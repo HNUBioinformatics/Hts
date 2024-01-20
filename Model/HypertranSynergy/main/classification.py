@@ -18,12 +18,12 @@ cline_num =
 
 
 class Initialize(nn.Module):
-    def __init__(self, dim_drug, dim_cellline, output, use_GMP=True):
+    def __init__(self, d_dim, c_dim, o_dim):
         super(Initialize, self).__init__()
-        self.JK1 = GIN_drug(2,dim_drug)
-        self.fc_cell1 = nn.Linear(dim_cellline, 128)
+        self.JK1 = GIN_drug(2,d_dim)
+        self.l1 = nn.Linear(c_dim, 128)
         self.batch_cell1 = nn.BatchNorm1d(128)
-        self.fc_cell2 = nn.Linear(128, output)
+        self.l2 = nn.Linear(128, o_dim)
 
         self.reset_para()
         self.act = nn.ReLU()
@@ -38,25 +38,25 @@ class Initialize(nn.Module):
                     nn.init.zeros_(m.bias)
         return
 
-    def forward(self, drug_feature, drug_adj, ibatch, gexpr_data):
-        x_drug = self.JK1(drug_feature, drug_adj, ibatch)
-        x_cellline = torch.tanh(self.fc_cell1(gexpr_data))
-        x_cellline = self.batch_cell1(x_cellline)
-        x_cellline = self.act(self.fc_cell2(x_cellline))
-        return x_drug, x_cellline
+    def forward(self, d_ft, d_adj, batch, c_ft):
+        d_ft = self.JK1(d_ft, d_adj, batch)
+        c_ft = torch.tanh(self.l1(c_ft))
+        c_ft = self.batch_cell1(c_ft)
+        c_ft = self.act(self.l2(c_ft))
+        return d_ft, c_ft
 
 
 class CIE(torch.nn.Module):
-    def __init__(self, in_channels, out_channels):
+    def __init__(self, num_ft_i, num_ft_o):
         super(CIE, self).__init__()
 
-        self.conv3 = HypergraphConv(128, out_channels)
+        self.conv = HypergraphConv(128, num_ft_o)
         self.act = nn.ReLU()
 
         self.MH = MultiHeadAttention(2, 128, 0.5, 0.5, 1e-5)
         self.FW = FeedForward(128, 256, 0.5, 'sigmoid', 1e-5)
 
-        self.dropout = nn.Dropout(0.3)
+        self.dp = nn.Dropout(0.3)
 
     def forward(self, x, edge):
         x = self.MH(x, None)
@@ -64,27 +64,27 @@ class CIE(torch.nn.Module):
         x = self.MH(x, None)
         x = self.FW(x)
 
-        x = self.act(self.dropout(self.conv3(x, edge)))
+        x = self.act(self.dp(self.conv(x, edge)))
         return x
 
 
 class Decoder(torch.nn.Module):
-    def __init__(self, in_channels):
+    def __init__(self, num_feat_i):
         super(Decoder, self).__init__()
-        self.fc1 = nn.Linear(in_channels, in_channels // 2)
-        self.batch1 = nn.BatchNorm1d(in_channels // 2)
-        self.fc2 = nn.Linear(in_channels // 2, in_channels // 4)
-        self.batch2 = nn.BatchNorm1d(in_channels // 4)
-        self.fc3 = nn.Linear(in_channels // 4, 1)
+        self.l1 = nn.Linear(num_feat_i, num_feat_i // 2)
+        self.batch1 = nn.BatchNorm1d(num_feat_i // 2)
+        self.l2 = nn.Linear(num_feat_i // 2, num_feat_i // 4)
+        self.batch2 = nn.BatchNorm1d(num_feat_i // 4)
+        self.l3 = nn.Linear(num_feat_i // 4, 1)
 
-        self.conv1 = nn.Conv2d(in_channels//4,1,kernel_size=1)
+        self.conv1 = nn.Conv2d(num_feat_i//4,1,kernel_size=1)
 
         self.reset_parameters()
-        self.drop_out = nn.Dropout(0.3)
+        self.dp = nn.Dropout(0.3)
        
         self.act = nn.Tanh()
         #self.act = nn.PReLU()
-        #self.act = nn.LeakyReLU(negative_slope=0.2)
+        #self.act = nn.LeakyReLU(negative_slope)
 
     def reset_parameters(self):
         for m in self.modules():
@@ -93,16 +93,16 @@ class Decoder(torch.nn.Module):
                 if m.bias is not None:
                     nn.init.zeros_(m.bias)
 
-    def forward(self, graph_embed, druga_id, drugb_id, cellline_id):
-        h1 = torch.cat((graph_embed[druga_id, :], graph_embed[drugb_id, :], graph_embed[cellline_id, :]), 1)
-        h = self.act(self.fc1(h1))
+    def forward(self, embs, entity1, entity2, entity3):
+        h1 = torch.cat((embs[entity1, :], embs[entity2, :], embs[entity3, :]), 1)
+        h = self.act(self.l1(h1))
         h = self.batch1(h)
         h = self.drop_out(h)
-        h = self.act(self.fc2(h))
+        h = self.act(self.l2(h))
         h = self.batch2(h)
-        h = self.drop_out(h)
+        h = self.dp(h)
 
-        h = self.fc3(h)
+        h = self.l3(h)
         #h = self.conv1(h)
 
         return torch.sigmoid(h.squeeze(dim=1))
@@ -123,11 +123,11 @@ class Hts(torch.nn.Module):
         reset(self.cie)
         reset(self.decoder)
 
-    def forward(self, drug_feature, drug_adj, ibatch, gexpr_data, adj, druga_id, drugb_id, cellline_id):
-        drug_embed, cellline_embed = self.initialize(drug_feature, drug_adj, ibatch, gexpr_data)
-        merge_embed = torch.cat((drug_embed, cellline_embed), 0)
-        graph_embed = self.cie(merge_embed, adj)
+    def forward(self, d_ft, d_adj, batch, c_ft, h_adj, entity1, entity2, entity3):
+        embs_d, embs_c = self.initialize(d_ft, d_adj, batch, c_ft)
+        embs_dc = torch.cat((embs_d, embs_c), 0)
+        graph_embed = self.cie(embs_dc, h_adj)
         drug_emb, cline_emb = graph_embed[:drug_num], graph_embed[drug_num:]
-        res = self.decoder(graph_embed, druga_id, drugb_id, cellline_id)
-        tsne = self.decoder(graph_embed, druga_id, drugb_id, cellline_id)
+        res = self.decoder(graph_embed, entity1, entity2, entity3)
+        tsne = self.decoder(graph_embed, entity1, entity2, entity3)
         return res, rec_drug, rec_cline, tsne
