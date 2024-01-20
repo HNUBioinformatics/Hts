@@ -67,18 +67,18 @@ class MultiHeadAttention(nn.Module):
 
 class FeedForward(nn.Module):
 
-    def __init__(self, hidden_size, inner_size, hidden_dropout_prob, hidden_act, layer_norm_eps):
+    def __init__(self, size, inner_size, dp, act, ne):
         super(FeedForward, self).__init__()
-        self.dense_1 = nn.Linear(hidden_size, inner_size)
-        self.intermediate_act_fn = self.get_hidden_act(hidden_act)
+        self.l1 = nn.Linear(size, inner_size)
+        self.act = self.get_hidden_act(act)
 
-        self.dense_2 = nn.Linear(inner_size, hidden_size)
+        self.l2 = nn.Linear(inner_size, size)
 
-        self.LayerNorm = ContraNorm(hidden_size, scale=0.0, dual_norm=False, pre_norm=False, temp=1.0, learnable=False,
+        self.LayerNorm = ContraNorm(size, scale=0.0, dual_norm=False, pre_norm=False, temp=1.0, learnable=False,
                                     positive=False, identity=False)
         self.LayerNorm1 = nn.LayerNorm(hidden_size, eps=layer_norm_eps)
 
-        self.dropout = nn.Dropout(hidden_dropout_prob)
+        self.dp = nn.Dropout(dp)
 
     def get_hidden_act(self, act):
         ACT2FN = {
@@ -86,7 +86,7 @@ class FeedForward(nn.Module):
             "relu": fn.relu,
             "swish": self.swish,
             "tanh": torch.tanh,
-            # "sigmoid": nn.LeakyReLU(negative_slope=0.2),
+            "leakyrelu": nn.LeakyReLU(negative_slope=0.2),
             "sigmoid": nn.ELU(alpha=0.1, inplace=False),
         }
         return ACT2FN[act]
@@ -97,13 +97,13 @@ class FeedForward(nn.Module):
     def swish(self, x):
         return x * torch.sigmoid(x)
 
-    def forward(self, input_tensor):
-        hidden_states = self.dense_1(input_tensor)
-        hidden_states = self.intermediate_act_fn(hidden_states)
+    def forward(self, input):
+        tr_t = self.l1(input)
+        tr_t = self.act(tr_t)
 
-        hidden_states = self.dense_2(hidden_states)
-        hidden_states = self.dropout(hidden_states)
-        hidden_states = self.LayerNorm1(hidden_states + input_tensor)
-        hidden_states = self.LayerNorm(hidden_states + input_tensor)
+        tr_t = self.l2(tr_t)
+        tr_t = self.dp(tr_t)
+        tr_t = self.LayerNorm1(tr_t + input)
+        tr_t = self.LayerNorm(tr_t + input)
 
-        return hidden_states
+        return tr_t
