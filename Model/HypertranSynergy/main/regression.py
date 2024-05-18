@@ -24,22 +24,22 @@ class Initialize(nn.Module):
         self.dropout = nn.Dropout(0.7)
         self.act = nn.ReLU()
 
-    def forward(self, drug_feature, drug_adj, ibatch, gexpr_data):
+    def forward(self, d_ft, d_adj, batch, c_ft):
 
-        x_drug = self.JK1(drug_feature, drug_adj, ibatch)
-        x_cellline = torch.tanh(self.fc_cell1(gexpr_data))
-        x_cellline = self.batch_cell1(x_cellline)
-        x_cellline = self.drop_out(x_cellline)
-        x_cellline = self.act(self.fc_cell2(x_cellline))
-        return x_drug, x_cellline
+        d_ft = self.JK1(d_ft, d_adj, batch)
+        c_ft = torch.tanh(self.fc_cell1(c_ft))
+        c_ft = self.batch_cell1(c_ft)
+        c_ft = self.dropout(c_ft)
+        c_ft = self.act(self.l2(c_ft))
+        return d_ft, c_ft
 
 class CIE(torch.nn.Module):
-    def __init__(self, in_channels, out_channels):
+    def __init__(self, num_ft_i, num_ft_o):
         super(CIE, self).__init__()
-        self.drop_out = nn.Dropout(0.75)
+        self.dp = nn.Dropout(0.75)
         self.act = nn.LeakyReLU(0.2)
 
-        self.conv3 = HypergraphConv(100, out_channels)
+        self.conv = HypergraphConv(100, num_ft_o)
         self.MH = MultiHeadAttention(2, 100, 0.5, 0.5, 1e-5)
         self.FW = FeedForward(100, 256, 0.5, 'sigmoid', 1e-5)
 
@@ -48,31 +48,31 @@ class CIE(torch.nn.Module):
         x = self.FW(x)
         x = self.MH(x, None)
         x = self.FW(x)
-        x = self.act(self.drop_out(self.conv3(x, edge)))
+        x = self.act(self.dp(self.conv(x, edge)))
 
         return x
 
 
 class Decoder(torch.nn.Module):
-    def __init__(self, in_channels):
+    def __init__(self, num_ft_i):
         super(Decoder, self).__init__()
-        self.fc1 = nn.Linear(in_channels, in_channels // 2)
-        self.batch1 = nn.BatchNorm1d(in_channels // 2)
-        self.fc2 = nn.Linear(in_channels // 2, in_channels // 4)
-        self.batch2 = nn.BatchNorm1d(in_channels // 4)
-        self.fc3 = nn.Linear(in_channels // 4, 1)
-        self.drop_out = nn.Dropout(0.3)
+        self.l1 = nn.Linear(num_ft_i, num_ft_i // 2)
+        self.batch1 = nn.BatchNorm1d(num_ft_i // 2)
+        self.l2 = nn.Linear(num_ft_i // 2, num_ft_i // 4)
+        self.batch2 = nn.BatchNorm1d(num_ft_i // 4)
+        self.l3 = nn.Linear(num_ft_i // 4, 1)
+        self.dp = nn.Dropout(0.3)
         self.act = nn.LeakyReLU(0.2)
 
-    def forward(self, graph_embed, druga_id, drugb_id, cellline_id):
-        h = torch.cat((graph_embed[druga_id, :], graph_embed[drugb_id, :], graph_embed[cellline_id, :]), 1)
-        h = self.act(self.fc1(h))
+    def forward(self, embs, entity1, entity2, entity3):
+        h = torch.cat(embs[ entity1, :], embs[entity2, :], embs[entity3, :]), 1)
+        h = self.act(self.l1(h))
         h = self.batch1(h)
-        h = self.drop_out(h)
-        h = self.act(self.fc2(h))
+        h = self.dp(h)
+        h = self.act(self.l2(h))
         h = self.batch2(h)
-        h = self.drop_out(h)
-        h = self.fc3(h)
+        h = self.dp(h)
+        h = self.l3(h)
         return h.squeeze(dim=1)
 
 
@@ -91,10 +91,10 @@ class Hts(torch.nn.Module):
         reset(self.cie)
         reset(self.decoder)
 
-    def forward(self, drug_feature, drug_adj, ibatch, gexpr_data, adj, druga_id, drugb_id, cellline_id):
-        drug_embed, cellline_embed = self.initialize(drug_feature, drug_adj, ibatch, gexpr_data)
-        merge_embed = torch.cat((drug_embed, cellline_embed), 0)
-        graph_embed = self.cie(merge_embed, adj)
-        drug_emb, cline_emb = graph_embed[:drug_num], graph_embed[drug_num:]       
-        res = self.decoder(graph_embed, druga_id, drugb_id, cellline_id)
-        return res, rec_drug, rec_cline
+    def forward(self, d_ft, d_adj, batch, c_ft, h_adj, entity1, entity2, entity3):
+        embs_d, embs_c = self.initialize(d_ft, d_adj, batch, c_ft)
+        embs_dc = torch.cat((embs_d, embs_c), 0)
+        embs_hg = self.cie(embs_dc, h_adj)
+        drug_emb, cline_emb = embs_hg[:drug_num], embs_hg[drug_num:]       
+        res = self.decoder(embs_hg, entity1, entity2, entity3)
+        return res, fie_d, fie_c
