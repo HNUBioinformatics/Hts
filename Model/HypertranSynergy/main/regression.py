@@ -15,13 +15,13 @@ cline_num =
 
 
 class Initialize(nn.Module):
-    def __init__(self, dim_drug, dim_cellline, output, use_GMP=True):
+    def __init__(self, d_dim,  c_dim, o_dim):
         super(Initialize, self).__init__()
-        self.JK1 = GIN_drug(2,dim_drug)
-        self.fc_cell1 = nn.Linear(dim_cellline, 128)
+        self.JK1 = GIN_drug(2,d_dim)
+        self.l1 = nn.Linear(c_dim, 128)
         self.batch_cell1 = nn.BatchNorm1d(128)
-        self.fc_cell2 = nn.Linear(128, output)
-        self.drop_out = nn.Dropout(0.7)
+        self.l2 = nn.Linear(128, o_dim)
+        self.dropout = nn.Dropout(0.7)
         self.act = nn.ReLU()
 
     def forward(self, drug_feature, drug_adj, ibatch, gexpr_data):
