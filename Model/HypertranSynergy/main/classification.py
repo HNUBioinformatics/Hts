@@ -97,7 +97,7 @@ class Decoder(torch.nn.Module):
         h1 = torch.cat((embs[entity1, :], embs[entity2, :], embs[entity3, :]), 1)
         h = self.act(self.l1(h1))
         h = self.batch1(h)
-        h = self.drop_out(h)
+        h = self.dp(h)
         h = self.act(self.l2(h))
         h = self.batch2(h)
         h = self.dp(h)
