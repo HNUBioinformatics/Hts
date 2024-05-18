@@ -25,7 +25,8 @@ you can make the embeddings contain rich grain-level information to make predict
    * https://pan.baidu.com/s/1UMCkKUNqEdoTl1UHw-sqcg 
 
 # Running the Code 
-   * Running the "main_.py" for classification or reression task.
+   * Running the "main_.py" for the classification task.
+   * Running the "main_reg.py" for  the regression task.
   
 # Others
   updating...
