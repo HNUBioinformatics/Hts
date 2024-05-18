@@ -180,9 +180,6 @@ if __name__ == '__main__':
                 epoch_nb = int(f.split('.')[0])
                 if epoch_nb > best_epoch:
                     os.remove(f)
-            print('The best results on validation set, Epoch: {:05d},'.format(best_epoch),
-                  'RMSE: {:.6f},'.format(best_metric[0]),
-                  'R2: {:.6f},'.format(best_metric[1]), 'Pearson r: {:.6f},'.format(best_metric[2]))
             model.load_state_dict(torch.load('{}.pth'.format(best_epoch)))
             test_metric, _, y_test_pred = test(drug_set, cline_set, synergy_graph, index_test,
                                                label_test, alpha)
