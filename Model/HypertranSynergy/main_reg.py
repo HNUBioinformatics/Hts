@@ -184,15 +184,9 @@ if __name__ == '__main__':
                   'RMSE: {:.6f},'.format(best_metric[0]),
                   'R2: {:.6f},'.format(best_metric[1]), 'Pearson r: {:.6f},'.format(best_metric[2]))
             model.load_state_dict(torch.load('{}.pth'.format(best_epoch)))
-            val_metric, _, y_val_pred = test(drug_set, cline_set, synergy_graph, index_validation,
-                                             label_validation, alpha)
             test_metric, _, y_test_pred = test(drug_set, cline_set, synergy_graph, index_test,
                                                label_test, alpha)
             np.savetxt(path + 'val_' + str(fold_num) + '_pred.txt', y_val_pred)          
-            file.write('val_metric:')
-            for item in val_metric:
-                file.write(str(item) + '\t')
-            file.write('\ntest_metric:')
             for item in test_metric:
                 file.write(str(item) + '\t')
             file.write('\n')
