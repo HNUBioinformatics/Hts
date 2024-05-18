@@ -101,12 +101,12 @@ def test(drug_fea_set, cline_fea_set, synergy_adj, index, label, alpha):
 
 if __name__ == '__main__':
     dataset_name = 'ONEIL'
-    seed =
+    seed =10
     cv_mode_ls = [1, 2, 3]
-    epochs =
-    learning_rate = 
-    L2 = 
-    alpha = 
+    epochs =2500
+    learning_rate = 0.00005
+    L2 = 1e-4
+    alpha = 0.4
     root_dir = ''
     for cv_mode in cv_mode_ls:
         path = os.path.join(root_dir,'result_cls/' + dataset_name + '_' + str(cv_mode) + '_result.txt')
@@ -134,7 +134,9 @@ if __name__ == '__main__':
             if cv_mode == 1:
                 synergy_train, synergy_validation = cv_data[train_index], cv_data[validation_index]
             elif cv_mode == 2:
-                train_name, test_name = cv_data[train_index], cv_data[validation_index]               
+                train_name, test_name = cv_data[train_index], cv_data[validation_index]
+                synergy_train = np.array([i for i in synergy_cv if i[2] in train_name])
+                synergy_validation = np.array([i for i in synergy_cv if i[2] in test_name])
             else:
                 pair_train, pair_validation = cv_data[train_index], cv_data[validation_index]
                 synergy_train = np.array(
@@ -144,7 +146,9 @@ if __name__ == '__main__':
             # ---construct train_set+validation_set
             np.savetxt(path + 'val_' + str(fold_num) + '_true.txt', synergy_validation[:, 3])
             label_train = torch.from_numpy(np.array(synergy_train[:, 3], dtype='float32')).to(device)
-            label_validation = torch.from_numpy(np.array(synergy_validation[:, 3], dtype='float32')).to(device)           
+            label_validation = torch.from_numpy(np.array(synergy_validation[:, 3], dtype='float32')).to(device)
+            index_train = torch.from_numpy(synergy_train).to(device)
+            index_validation = torch.from_numpy(synergy_validation).to(device)
             # -----construct hyper_synergy_graph_set
             edge_data = synergy_train[synergy_train[:, 3] == 1, 0:3]
             synergy_edge = edge_data.reshape(1, -1)
@@ -176,7 +180,14 @@ if __name__ == '__main__':
                                                  index_train, label_train, alpha)
                 val_metric, val_loss, _ = test(drug_set, cline_set, synergy_graph,
                                                index_validation, label_validation, alpha)
-               
+                if epoch % 20 == 0:
+                    print('Epoch: {:05d},'.format(epoch), 'loss_train: {:.6f},'.format(train_loss),
+                          'AUC: {:.6f},'.format(train_metric[0]), 'AUPR: {:.6f},'.format(train_metric[1]),
+                          'F1: {:.6f},'.format(train_metric[2]), 'ACC: {:.6f},'.format(train_metric[3]),
+                          )
+                    print('Epoch: {:05d},'.format(epoch), 'loss_val: {:.6f},'.format(val_loss),
+                          'AUC: {:.6f},'.format(val_metric[0]), 'AUPR: {:.6f},'.format(val_metric[1]),
+                          'F1: {:.6f},'.format(val_metric[2]), 'ACC: {:.6f},'.format(val_metric[3]))
                 torch.save(model.state_dict(), '{}.pth'.format(epoch))
                 if val_metric[0] > best_metric[0]:
                     best_metric = val_metric
@@ -188,14 +199,19 @@ if __name__ == '__main__':
                         os.remove(f)
             files = glob.glob('*.pth')
             for f in files:
-                epoch_nb = int(f.split('.')[0])         
-            for item in val_metric:
-                file.write(str(item) + '\t')
-            file.write('\ntest_metric:')
+                epoch_nb = int(f.split('.')[0])
+                if epoch_nb > best_epoch:
+                    os.remove(f)
+            model.load_state_dict(torch.load('{}.pth'.format(best_epoch)))
+            val_metric, _, y_val_pred = test(drug_set, cline_set, synergy_graph, index_validation, label_validation,
+                                             alpha)
+            test_metric, _, y_test_pred = test(drug_set, cline_set, synergy_graph, index_test, label_test, alpha)
+            np.savetxt(path + 'test_' + str(fold_num) + '_pred.txt', y_test_pred)
             for item in test_metric:
                 file.write(str(item) + '\t')
             file.write('\n')
             final_metric += test_metric
             fold_num = fold_num + 1
         final_metric /= 5
+
        
