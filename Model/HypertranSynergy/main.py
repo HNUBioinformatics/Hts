@@ -33,7 +33,6 @@ def load_data(dataset):
     return drug_fea, cline_fea, synergy, drug_sim_matrix, cline_sim_matrix
 
 
-
 def data_split(synergy, rd_seed=0):
     synergy_pos = pd.DataFrame([i for i in synergy if i[3] == 1])
     synergy_neg = pd.DataFrame([i for i in synergy if i[3] == 0])
