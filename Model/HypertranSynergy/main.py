@@ -202,8 +202,6 @@ if __name__ == '__main__':
                 if epoch_nb > best_epoch:
                     os.remove(f)
             model.load_state_dict(torch.load('{}.pth'.format(best_epoch)))
-            val_metric, _, y_val_pred = test(drug_set, cline_set, synergy_graph, index_validation, label_validation,
-                                             alpha)
             test_metric, _, y_test_pred = test(drug_set, cline_set, synergy_graph, index_test, label_test, alpha)
             np.savetxt(path + 'test_' + str(fold_num) + '_pred.txt', y_test_pred)
             for item in test_metric:
