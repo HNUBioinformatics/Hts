@@ -210,5 +210,8 @@ if __name__ == '__main__':
             final_metric += test_metric
             fold_num = fold_num + 1
         final_metric /= 5
+        print('Final 5-cv average results, AUC: {:.6f},'.format(final_metric[0]),
+              'AUPR: {:.6f},'.format(final_metric[1]),
+              'F1: {:.6f},'.format(final_metric[2]), 'ACC: {:.6f},'.format(final_metric[3]))
 
        
