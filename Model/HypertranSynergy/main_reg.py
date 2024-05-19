@@ -187,7 +187,10 @@ if __name__ == '__main__':
             for item in test_metric:
                 file.write(str(item) + '\t')
             file.write('\n')
-            final_metric += val_metric
+            final_metric += test_metric
             fold_num = fold_num + 1
         final_metric /= 5
+        print('Final 5-cv average results, RMSE: {:.6f},'.format(final_metric[0]),
+              'R2: {:.6f},'.format(final_metric[1]),
+              'Pearson r: {:.6f},'.format(final_metric[2]))
   
