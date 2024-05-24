@@ -36,7 +36,7 @@ class Initialize(nn.Module):
 class CIE(torch.nn.Module):
     def __init__(self, num_ft_i, num_ft_o):
         super(CIE, self).__init__()
-        self.dp = nn.Dropout(0.75)
+        self.dp = nn.Dropout(0.4)
         self.act = nn.LeakyReLU(0.2)
 
         self.conv = HypergraphConv(100, num_ft_o)
